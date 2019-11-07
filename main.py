@@ -11,7 +11,9 @@ class Environment:
         self.path = path
 '''
 
-    def setPath():
+    #def setPath():
+    def __init__(self):
+
         config = configparser.ConfigParser()
         config.read('settings.ini')
         section = config.sections()
@@ -19,7 +21,9 @@ class Environment:
         if 'PHP_PATH' in section:
             path = config['PHP_PATH']['path']
             _filesPath = config['PHP_PATH']['filePath']
-            return path, _filesPath
+
+            self.path = path
+            self.files = _filesPath
 
     def getPyVersion(self):
 
@@ -32,26 +36,23 @@ class Environment:
             sys.exit()
 
 
-    def verify():
-        _path, _pathfile = Environment.setPath()
-
-        if os.path.exists(_path):
-            return _path
+    def verify(self):
+        if os.path.exists(self.path):
+            return self.path
         else:
-            print("Path {} doesn't exist, plese verify settings".format(_path))
+            print("Path {} doesn't exist, plese verify settings".format(self.path))
 
 
-    def verifyFiles():
-        _path, _pathfile = Environment.setPath()
+    def verifyFiles(self):
 
-        if os.path.isfile(_pathfile):
-            return _pathfile
+        if os.path.isfile(self.files):
+            print('{} exists'.format(self.files))
         else:
-            print(None)
+            print('No files')
 
 
     def listPHP():
-        if Environment.verify(): os.chdir(Environment.verify())
+        if Environment.verify(None): os.chdir(Environment.verify())
         #print([d for d in os.listdir('.') if os.path.isdir(d)])
         dirname = []
         for dir in os.listdir('.'):
@@ -61,10 +62,10 @@ class Environment:
         return dirname
 
 
-    def choisePHP():
+    def choisePHP(self):
         #dirname, countdir = Environment.listPHP(None)
 
-        if Environment.listPHP(): dirname = Environment.listPHP()
+        dirname = Environment.listPHP()
 
 
         for index, d in enumerate(dirname):
@@ -73,13 +74,13 @@ class Environment:
         try:
             choise = int(input())
             os.chdir(dirname[choise])
-            return os.getcwd()
         except:
             print('Must be integer')
             exit()
 
     def wfiles(self):
-        Environment.choisePHP()#: Environment.verifyFiles()
+        choisePHP()
+        #Environment.verifyFiles()
 
 
 E = Environment()
