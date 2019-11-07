@@ -14,7 +14,9 @@ class Environment:
         section = config.sections()
 
         if 'PHP_PATH' in section:
-            return  config['PHP_PATH']['path']
+            path = config['PHP_PATH']['path']
+            pathfile = config['PHP_PATH']['filePath']
+            return path, pathfile
 
     def getPyVersion(self):
 
@@ -28,15 +30,24 @@ class Environment:
 
 
     def verifyPath():
-        if os.path.exists(Environment.setPath()):
-            return Environment.setPath()
+        path, pathfile = Environment.setPath()
+        if os.path.exists(path):
+            return path
         else:
-            print("Path {} doesn't exist, plese verify settings".format(Environment.setPath()))
+            print("Path {} doesn't exist, plese verify settings".format(path))
+
+    def verifyFiles():
+        path, pathfile = Environment.setPath()
+
+        if os.path.isfile(pathfile):
+            print(True)
+        else:
+            print('none')
 
 
-
-    def listPHP(self):
-        if Environment.verifyPath(): os.chdir(Environment.setPath())
+    def listPHP():
+        #path, pathfile = Environment.setPath()
+        if Environment.verifyPath(): os.chdir(Environment.verifyPath())
         #print([d for d in os.listdir('.') if os.path.isdir(d)])
         dirname = []
         for dir in os.listdir('.'):
@@ -48,7 +59,7 @@ class Environment:
 
     def choisePHP():
         #dirname, countdir = Environment.listPHP(None)
-        dirname = Environment.listPHP(None)
+        dirname = Environment.listPHP()
 
         for index, d in enumerate(dirname):
             print('Press {index} for {dirname} '.format(index = index, dirname = d))
@@ -62,9 +73,12 @@ class Environment:
             exit()
 
     def wfiles(self):
-        pass
+        Environment.choisePHP()
+
+        Environment.verifyFiles()
 
 
 E = Environment()
 E.getPyVersion()
-E.choisePHP()
+E.wfiles()
+#E.verifyFiles()
