@@ -2,6 +2,9 @@
 
 import sys, os, configparser
 
+
+
+
 class Environment:
     '''
     def __init__(self, path):
@@ -15,8 +18,8 @@ class Environment:
 
         if 'PHP_PATH' in section:
             path = config['PHP_PATH']['path']
-            pathfile = config['PHP_PATH']['filePath']
-            return path, pathfile
+            _filesPath = config['PHP_PATH']['filePath']
+            return path, _filesPath
 
     def getPyVersion(self):
 
@@ -29,25 +32,26 @@ class Environment:
             sys.exit()
 
 
-    def verifyPath():
-        path, pathfile = Environment.setPath()
-        if os.path.exists(path):
-            return path
+    def verify():
+        _path, _pathfile = Environment.setPath()
+
+        if os.path.exists(_path):
+            return _path
         else:
-            print("Path {} doesn't exist, plese verify settings".format(path))
+            print("Path {} doesn't exist, plese verify settings".format(_path))
+
 
     def verifyFiles():
-        path, pathfile = Environment.setPath()
+        _path, _pathfile = Environment.setPath()
 
-        if os.path.isfile(pathfile):
-            print(True)
+        if os.path.isfile(_pathfile):
+            return _pathfile
         else:
-            print('none')
+            print(None)
 
 
     def listPHP():
-        #path, pathfile = Environment.setPath()
-        if Environment.verifyPath(): os.chdir(Environment.verifyPath())
+        if Environment.verify(): os.chdir(Environment.verify())
         #print([d for d in os.listdir('.') if os.path.isdir(d)])
         dirname = []
         for dir in os.listdir('.'):
@@ -59,7 +63,9 @@ class Environment:
 
     def choisePHP():
         #dirname, countdir = Environment.listPHP(None)
-        dirname = Environment.listPHP()
+
+        if Environment.listPHP(): dirname = Environment.listPHP()
+
 
         for index, d in enumerate(dirname):
             print('Press {index} for {dirname} '.format(index = index, dirname = d))
@@ -73,12 +79,11 @@ class Environment:
             exit()
 
     def wfiles(self):
-        Environment.choisePHP()
-
-        Environment.verifyFiles()
+        Environment.choisePHP()#: Environment.verifyFiles()
 
 
 E = Environment()
 E.getPyVersion()
 E.wfiles()
 #E.verifyFiles()
+
