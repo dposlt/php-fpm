@@ -35,7 +35,7 @@ class Environment:
             print('Your currently version is: {}'.format(sys.version))
             sys.exit()
 
-
+    
     def verify(self):
         if os.path.exists(self.path):
             return self.path
@@ -46,13 +46,14 @@ class Environment:
     def verifyFiles(self):
 
         if os.path.isfile(self.files):
-            print('{} exists'.format(self.files))
+            return self.files
         else:
             print('No files')
 
 
-    def listPHP():
-        if Environment.verify(None): os.chdir(Environment.verify())
+    def listPHP(self):
+        if self.verify(): os.chdir(self.verify())
+        #if Environment.verify(None): os.chdir(Environment.verify())
         #print([d for d in os.listdir('.') if os.path.isdir(d)])
         dirname = []
         for dir in os.listdir('.'):
@@ -65,7 +66,7 @@ class Environment:
     def choisePHP(self):
         #dirname, countdir = Environment.listPHP(None)
 
-        dirname = Environment.listPHP()
+        dirname = self.listPHP()
 
 
         for index, d in enumerate(dirname):
@@ -79,12 +80,17 @@ class Environment:
             exit()
 
     def wfiles(self):
-        choisePHP()
+        try:
+            self.choisePHP()
+            if self.verifyFiles():
+                with open(self.verifyFiles()) as conf:
+                    conf.read()
+        except:
+            return 'Method is not read'
         #Environment.verifyFiles()
 
 
 E = Environment()
 E.getPyVersion()
-E.wfiles()
-#E.verifyFiles()
 
+E.wfiles()
