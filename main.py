@@ -44,6 +44,7 @@ class Environment:
             return self.php_path
         else:
             print("Path {} doesn't exist, plese verify settings".format(self.php_path))
+            exit()
 
     def verifyFiles(self, files):
         self.files = files
