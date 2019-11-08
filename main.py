@@ -3,15 +3,13 @@
 import sys, os, configparser
 
 
-
-
 class Environment:
     '''
     def __init__(self, path):
         self.path = path
 '''
 
-    #def setPath():
+    # def setPath():
     def __init__(self):
 
         config = configparser.ConfigParser()
@@ -21,9 +19,11 @@ class Environment:
         if 'PHP_PATH' in section:
             path = config['PHP_PATH']['path']
             _filesPath = config['PHP_PATH']['filePath']
+            _nls = config['PHP_PATH']['nls_lang']
 
             self.path = path
             self.files = _filesPath
+            self.nls = _nls
 
     def getPyVersion(self):
 
@@ -35,42 +35,36 @@ class Environment:
             print('Your currently version is: {}'.format(sys.version))
             sys.exit()
 
-    
     def verify(self):
         if os.path.exists(self.path):
             return self.path
         else:
             print("Path {} doesn't exist, plese verify settings".format(self.path))
 
-
     def verifyFiles(self):
-
         if os.path.isfile(self.files):
-            return self.files
+            return True
         else:
             print('No files')
 
-
     def listPHP(self):
         if self.verify(): os.chdir(self.verify())
-        #if Environment.verify(None): os.chdir(Environment.verify())
-        #print([d for d in os.listdir('.') if os.path.isdir(d)])
+        # if Environment.verify(None): os.chdir(Environment.verify())
+        # print([d for d in os.listdir('.') if os.path.isdir(d)])
         dirname = []
         for dir in os.listdir('.'):
-            if os.path.isdir(dir):  #jen adresare
-                if 'php' in dir:    #jen php adresare
+            if os.path.isdir(dir):  # jen adresare
+                if 'php' in dir:  # jen php adresare
                     dirname.append(dir)
         return dirname
 
-
     def choisePHP(self):
-        #dirname, countdir = Environment.listPHP(None)
+        # dirname, countdir = Environment.listPHP(None)
 
         dirname = self.listPHP()
 
-
         for index, d in enumerate(dirname):
-            print('Press {index} for {dirname} '.format(index = index, dirname = d))
+            print('Press {index} for {dirname} '.format(index=index, dirname=d))
 
         try:
             choise = int(input())
@@ -83,11 +77,17 @@ class Environment:
         try:
             self.choisePHP()
             if self.verifyFiles():
-                with open(self.verifyFiles()) as conf:
-                    conf.read()
+                with open(self.files, 'r+') as conf:
+                    line_found = any(self.nls in line for line in conf)
+                    if not line_found:
+                        conf.seek(0, os.SEEK_END)
+                        conf.write(f'\n{self.nls}')
+
+
+
         except:
             return 'Method is not read'
-        #Environment.verifyFiles()
+        # Environment.verifyFiles()
 
 
 E = Environment()
