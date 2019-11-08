@@ -17,13 +17,17 @@ class Environment:
         section = config.sections()
 
         if 'PHP_PATH' in section:
-            path = config['PHP_PATH']['path']
-            _filesPath = config['PHP_PATH']['filePath']
+            _php_path = config['PHP_PATH']['php_path']
+            _filesPath = config['PHP_PATH']['wwwConfPath']
             _nls = config['PHP_PATH']['nls_lang']
+            _php_fpm = config['PHP_PATH']['php_fpm_conf']
+            _php_error = config['PHP_PATH']['php_error']
 
-            self.path = path
+            self.php_path = _php_path
             self.files = _filesPath
             self.nls = _nls
+            self.php_fpm = _php_fpm
+            self.php_error = _php_error
 
     def getPyVersion(self):
 
@@ -36,13 +40,14 @@ class Environment:
             sys.exit()
 
     def verify(self):
-        if os.path.exists(self.path):
-            return self.path
+        if os.path.exists(self.php_path):
+            return self.php_path
         else:
-            print("Path {} doesn't exist, plese verify settings".format(self.path))
+            print("Path {} doesn't exist, plese verify settings".format(self.php_path))
 
-    def verifyFiles(self):
-        if os.path.isfile(self.files):
+    def verifyFiles(self, files):
+        self.files = files
+        if os.path.isfile(files):
             return True
         else:
             print('No files')
@@ -73,24 +78,30 @@ class Environment:
             print('Must be integer')
             exit()
 
-    def wfiles(self):
+    def writeNLSfiles(self):
         try:
             self.choisePHP()
-            if self.verifyFiles():
+            if self.verifyFiles(self.files):
                 with open(self.files, 'r+') as conf:
                     line_found = any(self.nls in line for line in conf)
                     if not line_found:
                         conf.seek(0, os.SEEK_END)
                         conf.write(f'\n{self.nls}')
 
-
-
+            if self.verifyFiles(self.php_fpm):
+                with open(self.php_fpm, 'r+') as conf:
+                    line_found = any(self.php_error in line for line in conf)
+                    if not line_found:
+                        conf.seek(0, os.SEEK_END)
+                        conf.write(f'\n{self.php_error}')
         except:
             return 'Method is not read'
         # Environment.verifyFiles()
 
 
+
 E = Environment()
 E.getPyVersion()
 
-E.wfiles()
+E.writeNLSfiles()
+#E.writePHP_fpm_Files()
