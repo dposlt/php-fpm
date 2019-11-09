@@ -69,12 +69,17 @@ class Environment:
 
         dirname = self.listPHP()
 
+        countIndex = 0
         for index, d in enumerate(dirname):
-            print('Press {index} for {dirname} '.format(index=index, dirname=d))
+            print('Press {index} for {dirname} '.format(index=index + 1, dirname=d))
+            countIndex +=1
 
         try:
             choise = int(input())
-            os.chdir(dirname[choise])
+
+            for i in range(countIndex):
+                if i == choise:
+                    os.chdir((dirname[choise]))
         except:
             print('Must be integer')
             exit()
