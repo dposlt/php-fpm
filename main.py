@@ -69,10 +69,13 @@ class Environment:
 
         dirname = self.listPHP()
 
-        countIndex = 0
+        #countIndex = 0
+        '''
         for index, d in enumerate(dirname):
             print('Press {index} for {dirname} '.format(index=index + 1, dirname=d))
             countIndex +=1
+        '''
+        [print('Press {index} for {dirname} '.format(index=index + 1, dirname = d))for index, d in enumerate(dirname)]
 
         try:
             choise = int(input())
